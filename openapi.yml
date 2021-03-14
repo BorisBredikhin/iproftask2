@@ -1,0 +1,175 @@
+openapi: 3.0.2
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  "/notes":
+    post:
+      summary: Post Notes
+      operationId: post_notes_notes_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/NoteBase"
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Note"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/notes/{note_id}":
+    get:
+      summary: Query
+      operationId: query_notes__note_id__get
+      parameters:
+        - required: true
+          schema:
+            title: Q
+            type: string
+          name: q
+          in: query
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Query Notes  Note Id  Get
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Note"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+    put:
+      summary: Put Note
+      operationId: put_note_notes__note_id__put
+      parameters:
+        - required: true
+          schema:
+            title: Note Id
+            type: integer
+          name: note_id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EditNote"
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Note"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+    delete:
+      summary: Delete
+      operationId: delete_notes__note_id__delete
+      parameters:
+        - required: true
+          schema:
+            title: Id
+            type: integer
+          name: id
+          in: query
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Note"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+components:
+  schemas:
+    EditNote:
+      title: EditNote
+      type: object
+      properties:
+        title:
+          title: Title
+          type: string
+        content:
+          title: Content
+          type: string
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            "$ref": "#/components/schemas/ValidationError"
+    Note:
+      title: Note
+      required:
+        - content
+        - id
+      type: object
+      properties:
+        title:
+          title: Title
+          type: string
+        content:
+          title: Content
+          type: string
+        id:
+          title: Id
+          type: integer
+    NoteBase:
+      title: NoteBase
+      required:
+        - content
+      type: object
+      properties:
+        title:
+          title: Title
+          type: string
+        content:
+          title: Content
+          type: string
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            type: string
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
